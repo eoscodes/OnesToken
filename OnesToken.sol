@@ -1,8 +1,8 @@
 /**
- *Submitted for verification at Etherscan.io on 2017-07-06
+ *Submitted for verification at Etherscan.io on 2020-03-03
 */
 
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.12;
 
 /**
  * Math operations with safety checks
@@ -53,8 +53,8 @@ contract ONESToken is SafeMath {
     /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    /* This notifies clients about the amount burnt */
-    event Burn(address indexed from, uint256 value);
+    /* This notifies clients about the amount retire */
+    event Retire(address indexed from, uint256 value);
 
     /* This notifies clients about the amount frozen */
     event Freeze(address indexed from, uint256 value);
@@ -70,7 +70,7 @@ contract ONESToken is SafeMath {
 
     /* Send coins */
     function transfer(address _to, uint256 _value) {
-        if (_to == 0x0) throw; // Prevent transfer to 0x0 address. Use burn() instead
+        if (_to == 0x0) throw; // Prevent transfer to 0x0 address. Use retire() instead
         if (_value <= 0) throw;
         if (balanceOf[msg.sender] < _value) throw; // Check if the sender has enough
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
@@ -90,7 +90,7 @@ contract ONESToken is SafeMath {
     function transferFrom(address _from, address _to, uint256 _value)
         returns (bool success)
     {
-        if (_to == 0x0) throw; // Prevent transfer to 0x0 address. Use burn() instead
+        if (_to == 0x0) throw; // Prevent transfer to 0x0 address. Use retire() instead
         if (_value <= 0) throw;
         if (balanceOf[_from] < _value) throw; // Check if the sender has enough
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
@@ -105,12 +105,12 @@ contract ONESToken is SafeMath {
         return true;
     }
 
-    function burn(uint256 _value) returns (bool success) {
+    function retire(uint256 _value) returns (bool success) {
         if (balanceOf[msg.sender] < _value) throw; // Check if the sender has enough
         if (_value <= 0) throw;
         balanceOf[msg.sender] = SafeMath.safeSub(balanceOf[msg.sender], _value); // Subtract from the sender
         totalSupply = SafeMath.safeSub(totalSupply, _value); // Updates totalSupply
-        Burn(msg.sender, _value);
+        Retire(msg.sender, _value);
         return true;
     }
 
@@ -139,5 +139,5 @@ contract ONESToken is SafeMath {
     }
 
     // can accept ether
-    function() payable {}
+    function()  payable {}
 }
